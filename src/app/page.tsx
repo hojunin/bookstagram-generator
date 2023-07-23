@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const { push } = useRouter();
-  const routeToTargetPage = () => {};
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1>북스타그램을 관리해보자</h1>

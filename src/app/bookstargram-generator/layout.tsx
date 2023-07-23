@@ -1,3 +1,5 @@
+import { Metadata } from 'next';
+
 export default function RootLayout({
   children,
 }: {
@@ -5,3 +7,7 @@ export default function RootLayout({
 }) {
   return <main className="p-20">{children}</main>;
 }
+export const metadata: Metadata = {
+  title: '북스타그램 카드 생성기',
+  description: '썸네일과 카드를 생성합니다',
+};

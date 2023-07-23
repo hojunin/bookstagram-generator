@@ -3,6 +3,7 @@ import Button from '@/components/button';
 import ColorPicker from '@/components/colorpicker';
 import CloseIcon from '@/components/icons/close';
 import Input from '@/components/input';
+import Loader from '@/components/loader';
 import html2canvas from 'html2canvas';
 import { useRef, useState } from 'react';
 
@@ -29,6 +30,7 @@ const BookStagramGenerator = () => {
   const [contents, setContents] = useState();
   const [contentsList, setContentsList] = useState([]);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [isLoading, setIsLoading] = useState(false);
   const thumbnailRef = useRef<HTMLDivElement | null>(null);
   const contentsRef = useRef<HTMLDivElement | null>(null);
 
@@ -64,21 +66,27 @@ const BookStagramGenerator = () => {
   };
 
   const handleCapture = async () => {
-    if (!thumbnailRef.current) return;
-    // 컴포넌트를 이미지로 캡처하여 canvas 객체로 변환
-    const canvas = await html2canvas(thumbnailRef.current, {
-      useCORS: true,
-      imageTimeout: 1000,
-    });
-    // canvas 객체를 이미지로 변환 (기본적으로 PNG 형식으로 저장)
-    const image = canvas.toDataURL('image/png');
+    setIsLoading(true);
+    try {
+      if (!thumbnailRef.current || !isValidURL(thumbnail)) return;
+      // 컴포넌트를 이미지로 캡처하여 canvas 객체로 변환
+      const canvas = await html2canvas(thumbnailRef.current, {
+        useCORS: true,
+        imageTimeout: 1000,
+      });
+      // canvas 객체를 이미지로 변환 (기본적으로 PNG 형식으로 저장)
+      const image = canvas.toDataURL('image/png');
 
-    // 이미지 다운로드 등의 원하는 작업 수행
-    // 여기에서는 이미지 다운로드 링크를 생성하여 사용자에게 다운로드할 수 있도록 함
-    const link = document.createElement('a');
-    link.href = image;
-    link.download = 'captured_component.png';
-    link.click();
+      // 이미지 다운로드 등의 원하는 작업 수행
+      // 여기에서는 이미지 다운로드 링크를 생성하여 사용자에게 다운로드할 수 있도록 함
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = 'captured_component.png';
+      link.click();
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCaptureContents = async (index: number) => {
@@ -100,18 +108,27 @@ const BookStagramGenerator = () => {
   };
 
   const downloadWholeContents = async () => {
-    setActiveIndex(0);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsLoading(true);
+    try {
+      if (contentsList.length === 0) {
+        return;
+      }
+      setActiveIndex(0);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    for (let i = 0; i < contentsList.length; i++) {
-      setActiveIndex(i);
-      await handleCaptureContents(i);
+      for (let i = 0; i < contentsList.length; i++) {
+        setActiveIndex(i);
+        await handleCaptureContents(i);
+      }
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="my-0 mx-auto px-20">
-      <h1>북스타그램 카드 제작 도우미</h1>
+      <h1 className="">북스타그램 카드 제작 도우미</h1>
       <div className="flex items-center my-6">
         <Input
           label="썸네일"
@@ -128,27 +145,42 @@ const BookStagramGenerator = () => {
         {/* <ColorPicker /> */}
       </div>
       <section className="flex m-5 overflow-x-scroll">
-        <div
-          ref={thumbnailRef}
-          className="bg-lime-200 w-96 h-96 flex items-center justify-center mr-10 p-10"
-        >
-          {isValidURL(thumbnail) ? (
-            <img className="w-40 h-56" src={thumbnail} alt="썸네일" />
-          ) : (
-            <p className="text-gray-800 text-3xl text-center leading-10">
-              썸네일용 사진이 없습니다
-            </p>
-          )}
+        <div>
+          <div
+            ref={thumbnailRef}
+            className="bg-lime-200 w-96 h-96 flex items-center justify-center mr-10 p-10"
+          >
+            {isValidURL(thumbnail) ? (
+              <img className="w-40 h-56" src={thumbnail} alt="썸네일" />
+            ) : (
+              <p className="text-gray-800 text-3xl text-center leading-10">
+                썸네일용 사진이 없습니다
+              </p>
+            )}
+          </div>
+          <Button
+            label="썸네일 다운로드"
+            style={{ marginRight: 10, marginTop: 30 }}
+            onClick={handleCapture}
+          />
         </div>
-        <div
-          ref={contentsRef}
-          className="bg-lime-200 w-96 h-96 flex items-center justify-center mr-10 p-10"
-        >
-          <p className="text-gray-800 text-3xl text-center leading-10">
-            {activeIndex >= 0
-              ? contentsList[activeIndex]
-              : '선택된 컨텐츠가 없어요'}
-          </p>
+
+        <div>
+          <div
+            ref={contentsRef}
+            className="bg-lime-200 w-96 h-96 flex items-center justify-center mr-10 p-10"
+          >
+            <p className="text-gray-800 text-3xl text-center leading-10">
+              {activeIndex >= 0
+                ? contentsList[activeIndex]
+                : '선택된 컨텐츠가 없어요'}
+            </p>
+          </div>
+          <Button
+            label="썸네일 다운로드"
+            style={{ marginRight: 10, marginTop: 30 }}
+            onClick={handleCapture}
+          />
         </div>
 
         <ol className="w-80">
@@ -169,14 +201,8 @@ const BookStagramGenerator = () => {
           ))}
         </ol>
       </section>
-      <section className="flex items-center">
-        <Button
-          label="썸네일 다운로드"
-          style={{ marginRight: 10 }}
-          onClick={handleCapture}
-        />
-        <Button label="컨텐츠 다운로드" onClick={downloadWholeContents} />
-      </section>
+
+      <Loader visible={isLoading} />
     </div>
   );
 };
