@@ -177,9 +177,9 @@ const BookStagramGenerator = () => {
             </p>
           </div>
           <Button
-            label="썸네일 다운로드"
+            label="컨텐츠 다운로드"
             style={{ marginRight: 10, marginTop: 30 }}
-            onClick={handleCapture}
+            onClick={downloadWholeContents}
           />
         </div>
 
