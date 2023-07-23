@@ -5,7 +5,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <main className="p-20">{children}</main>;
+  return <main className="p-20 max-sm:p-4">{children}</main>;
 }
 export const metadata: Metadata = {
   title: '북스타그램 카드 생성기',

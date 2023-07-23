@@ -4,6 +4,7 @@ import ColorPicker from '@/components/colorpicker';
 import CloseIcon from '@/components/icons/close';
 import Input from '@/components/input';
 import Loader from '@/components/loader';
+import Slider from '@/components/slider';
 import html2canvas from 'html2canvas';
 import { useRef, useState } from 'react';
 
@@ -31,6 +32,10 @@ const BookStagramGenerator = () => {
   const [contentsList, setContentsList] = useState([]);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
+  const [contentsSize, setContentsSize] = useState(30);
+
+  const [cardColor, setCardColor] = useState('#D9F99D');
+
   const thumbnailRef = useRef<HTMLDivElement | null>(null);
   const contentsRef = useRef<HTMLDivElement | null>(null);
 
@@ -74,14 +79,11 @@ const BookStagramGenerator = () => {
         useCORS: true,
         imageTimeout: 1000,
       });
-      // canvas 객체를 이미지로 변환 (기본적으로 PNG 형식으로 저장)
       const image = canvas.toDataURL('image/png');
 
-      // 이미지 다운로드 등의 원하는 작업 수행
-      // 여기에서는 이미지 다운로드 링크를 생성하여 사용자에게 다운로드할 수 있도록 함
       const link = document.createElement('a');
       link.href = image;
-      link.download = 'captured_component.png';
+      link.download = 'thumbnail.png';
       link.click();
     } catch (error) {
     } finally {
@@ -96,11 +98,8 @@ const BookStagramGenerator = () => {
       useCORS: true,
       imageTimeout: 1000,
     });
-    // canvas 객체를 이미지로 변환 (기본적으로 PNG 형식으로 저장)
     const image = canvas.toDataURL('image/png');
 
-    // 이미지 다운로드 등의 원하는 작업 수행
-    // 여기에서는 이미지 다운로드 링크를 생성하여 사용자에게 다운로드할 수 있도록 함
     const link = document.createElement('a');
     link.href = image;
     link.download = `card_${index}.png`;
@@ -126,34 +125,33 @@ const BookStagramGenerator = () => {
     }
   };
 
+  const handleSliderChange = (event) => {
+    setContentsSize(parseInt(event.target.value));
+  };
+
   return (
-    <div className="my-0 mx-auto px-20">
+    <div className="my-0 mx-auto px-20 max-sm:p-0">
       <h1 className="">북스타그램 카드 제작 도우미</h1>
-      <div className="flex items-center my-6">
-        <Input
-          label="썸네일"
-          value={thumbnail}
-          onChange={handleThumbnailChange}
-          style={{ marginRight: 10 }}
-        />
-        <Input
-          label="컨텐츠"
-          value={contents}
-          onChange={handleContentsChange}
-          onKeyPress={handleKeyPress}
-        />
-        {/* <ColorPicker /> */}
-      </div>
-      <section className="flex m-5 overflow-x-scroll">
-        <div>
+      <section className="flex m-5 overflow-x-scroll max-sm:flex-col">
+        <div className="mr-10">
+          <Input
+            label="썸네일"
+            value={thumbnail}
+            onChange={handleThumbnailChange}
+            style={{ marginRight: 10, marginBottom: 20 }}
+          />
           <div
             ref={thumbnailRef}
-            className="bg-lime-200 w-96 h-96 flex items-center justify-center mr-10 p-10"
+            className="w-96 h-96 flex items-center justify-center"
+            style={{ backgroundColor: cardColor }}
           >
             {isValidURL(thumbnail) ? (
               <img className="w-40 h-56" src={thumbnail} alt="썸네일" />
             ) : (
-              <p className="text-gray-800 text-3xl text-center leading-10">
+              <p
+                className="text-gray-800 text-center leading-10"
+                style={{ fontSize: contentsSize }}
+              >
                 썸네일용 사진이 없습니다
               </p>
             )}
@@ -165,28 +163,56 @@ const BookStagramGenerator = () => {
           />
         </div>
 
-        <div>
+        <div className="mr-10">
+          <div className="flex items-center mb-5">
+            <Input
+              label="컨텐츠"
+              value={contents}
+              onChange={handleContentsChange}
+              onKeyPress={handleKeyPress}
+            />
+            <ColorPicker
+              selectedColor={cardColor}
+              setSelectedColor={setCardColor}
+            />
+            <Slider value={contentsSize} setValue={handleSliderChange} />
+          </div>
           <div
             ref={contentsRef}
-            className="bg-lime-200 w-96 h-96 flex items-center justify-center mr-10 p-10"
+            className="w-96 h-96 flex items-center justify-center p-10"
+            style={{ backgroundColor: cardColor }}
           >
-            <p className="text-gray-800 text-3xl text-center leading-10">
+            <p
+              className="text-gray-800 text-center"
+              style={{
+                fontSize: contentsSize,
+                lineHeight: 1,
+              }}
+            >
               {activeIndex >= 0
                 ? contentsList[activeIndex]
                 : '선택된 컨텐츠가 없어요'}
             </p>
           </div>
-          <Button
-            label="컨텐츠 다운로드"
-            style={{ marginRight: 10, marginTop: 30 }}
-            onClick={downloadWholeContents}
-          />
+          <div className="flex">
+            <Button
+              label="한번에 다운로드"
+              style={{ marginRight: 10, marginTop: 30 }}
+              onClick={downloadWholeContents}
+            />
+            <Button
+              label="이것만 다운로드"
+              style={{ marginRight: 10, marginTop: 30 }}
+              onClick={() => handleCaptureContents(activeIndex)}
+            />
+          </div>
         </div>
 
         <ol className="w-80">
+          <h6 className="mb-5">컨텐츠 목록</h6>
           {contentsList.map((content, index) => (
             <li
-              className="flex items-center justify-between w-full bg-slate-600 p-2 cursor-pointer"
+              className="flex items-center justify-between w-full bg-slate-500 rounded-md mb-1 p-2 cursor-pointer"
               onClick={() => onClickItem(index)}
               key={content}
             >
