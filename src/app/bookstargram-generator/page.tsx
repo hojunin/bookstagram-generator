@@ -102,21 +102,30 @@ const BookStagramGenerator = () => {
 
     const link = document.createElement('a');
     link.href = image;
-    link.download = `card_${index}.png`;
+    link.download = `card_${index + 1}.png`;
     link.click();
+  };
+
+  const awaitSeconds = async (second: number) => {
+    return new Promise((resolve) => setTimeout(resolve, second));
   };
 
   const downloadWholeContents = async () => {
     setIsLoading(true);
+    setActiveIndex(0);
+
+    await awaitSeconds(500);
+
     try {
       if (contentsList.length === 0) {
         return;
       }
-      setActiveIndex(0);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      await awaitSeconds(500);
 
       for (let i = 0; i < contentsList.length; i++) {
         setActiveIndex(i);
+        await awaitSeconds(300);
         await handleCaptureContents(i);
       }
     } catch (error) {
