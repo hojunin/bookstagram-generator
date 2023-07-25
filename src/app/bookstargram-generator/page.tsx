@@ -1,4 +1,5 @@
 'use client';
+import BookSearch from '@/components/book-search/Index';
 import Button from '@/components/button';
 import ColorPicker from '@/components/colorpicker';
 import CloseIcon from '@/components/icons/close';
@@ -28,6 +29,7 @@ function isValidURL(url: string | null) {
 
 const BookStagramGenerator = () => {
   const [thumbnail, setThumbnail] = useState();
+  const [searchValue, setSearchValue] = useState('');
   const [contents, setContents] = useState();
   const [contentsList, setContentsList] = useState([]);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -143,11 +145,17 @@ const BookStagramGenerator = () => {
       <h1 className="">북스타그램 카드 제작 도우미</h1>
       <section className="flex m-5 overflow-x-scroll max-sm:flex-col">
         <div className="mr-10">
-          <Input
+          {/* <Input
             label="썸네일"
             value={thumbnail}
             onChange={handleThumbnailChange}
             style={{ marginRight: 10, marginBottom: 20 }}
+          /> */}
+
+          <BookSearch
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            setThumbnail={setThumbnail}
           />
           <div
             ref={thumbnailRef}
@@ -173,7 +181,7 @@ const BookStagramGenerator = () => {
         </div>
 
         <div className="mr-10">
-          <div className="flex items-center mb-5">
+          <div className="flex items-center mb-5 justify-between">
             <Input
               label="컨텐츠"
               value={contents}
@@ -203,7 +211,7 @@ const BookStagramGenerator = () => {
                 : '선택된 컨텐츠가 없어요'}
             </p>
           </div>
-          <div className="flex">
+          <div className="flex justify-between">
             <Button
               label="한번에 다운로드"
               style={{ marginRight: 10, marginTop: 30 }}

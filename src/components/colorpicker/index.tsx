@@ -6,7 +6,7 @@ const ColorPicker = ({ selectedColor, setSelectedColor }) => {
   };
 
   return (
-    <div className="flex items-center space-x-4 ml-5">
+    <div className="flex items-center space-x-4 mx-3">
       <div
         className="w-10 h-10 overflow-hidden"
         style={{ backgroundColor: selectedColor }}
