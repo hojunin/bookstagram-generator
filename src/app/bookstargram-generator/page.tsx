@@ -145,17 +145,11 @@ const BookStagramGenerator = () => {
       <h1 className="">북스타그램 카드 제작 도우미</h1>
       <section className="flex m-5 overflow-x-scroll max-sm:flex-col">
         <div className="mr-10">
-          {/* <Input
+          <Input
             label="썸네일"
             value={thumbnail}
             onChange={handleThumbnailChange}
             style={{ marginRight: 10, marginBottom: 20 }}
-          /> */}
-
-          <BookSearch
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
-            setThumbnail={setThumbnail}
           />
           <div
             ref={thumbnailRef}
