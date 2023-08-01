@@ -8,7 +8,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, ...inputElementProps }, ref: ForwardedRef<HTMLInputElement>) => {
     return (
-      <div className="input-group">
+      <div className="input-group w-full">
         <input
           ref={ref}
           required
