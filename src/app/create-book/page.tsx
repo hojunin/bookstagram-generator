@@ -87,9 +87,9 @@ const CreateBook = () => {
           />
           <Input value={status} onChange={onChangeStatus} label="상태" />
           <Input value={rating} onChange={onChangeRating} label="평점" />
+          <Input value={host} onChange={onChangeHost} label="호스트" />
           <Button label="추가하기" type="submit" />
         </form>
-        <Input value={host} onChange={onChangeHost} label="호스트" />
       </div>
     </div>
   );
