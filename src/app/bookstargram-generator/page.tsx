@@ -1,5 +1,5 @@
 'use client';
-import BookSearch from '@/components/book-search/Index';
+import BookstargramContent from '@/components/booksta-contents';
 import Button from '@/components/button';
 import ColorPicker from '@/components/colorpicker';
 import CloseIcon from '@/components/icons/close';
@@ -85,7 +85,7 @@ const BookStagramGenerator = () => {
 
       const link = document.createElement('a');
       link.href = image;
-      link.download = 'thumbnail.png';
+      link.download = 'alpha_thumbnail.png';
       link.click();
     } catch (error) {
     } finally {
@@ -238,7 +238,7 @@ const BookStagramGenerator = () => {
           ))}
         </ol>
       </section>
-
+      <BookstargramContent />
       <Loader visible={isLoading} />
     </div>
   );
