@@ -48,10 +48,13 @@ export const fetcher = async <T>({
   config,
 }: FetcherRequest): Promise<T> => {
   try {
-    const response = await fetch(`${process.env.SERVER_URL}/${path}`, {
-      ...defaultConfig,
-      ...config,
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/${path}`,
+      {
+        ...defaultConfig,
+        ...config,
+      },
+    );
 
     if (response.ok) {
       return await response.json();
