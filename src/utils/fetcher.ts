@@ -1,6 +1,4 @@
 import { ValueOf } from 'next/dist/shared/lib/constants';
-const BASE_URL = 'https://6431-112-147-241-71.ngrok-free.app';
-
 interface FetcherRequest {
   path: string;
   config?: FetchConfig;
@@ -48,10 +46,9 @@ const defaultConfig: FetchConfig = {
 export const fetcher = async <T>({
   path,
   config,
-  host,
 }: FetcherRequest): Promise<T> => {
   try {
-    const response = await fetch(`${host}/${path}`, {
+    const response = await fetch(`${process.env.SERVER_URL}/${path}`, {
       ...defaultConfig,
       ...config,
     });

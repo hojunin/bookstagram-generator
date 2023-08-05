@@ -18,8 +18,6 @@ const CreateBook = () => {
   const { value: status, onChangeInput: onChangeStatus } = useInput();
   const { value: rating, onChangeInput: onChangeRating } = useInput();
 
-  const { value: host, onChangeInput: onChangeHost } = useInput();
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -46,7 +44,6 @@ const CreateBook = () => {
         body: JSON.stringify(bookData),
         mode: 'no-cors',
       },
-      host,
     });
   };
 
@@ -87,7 +84,6 @@ const CreateBook = () => {
           />
           <Input value={status} onChange={onChangeStatus} label="상태" />
           <Input value={rating} onChange={onChangeRating} label="평점" />
-          <Input value={host} onChange={onChangeHost} label="호스트" />
           <Button label="추가하기" type="submit" />
         </form>
       </div>
